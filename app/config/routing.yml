@@ -1,3 +1,11 @@
+fares_catalog_category:
+    resource: "@FaresCatalogBundle/Controller/CategoryController.php"
+    type:     annotation
+
+fares_catalog:
+    resource: "@FaresCatalogBundle/Resources/config/routing.xml"
+    prefix:   /catalog
+
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
