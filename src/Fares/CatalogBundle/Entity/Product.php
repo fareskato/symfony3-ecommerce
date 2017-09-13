@@ -2,23 +2,16 @@
 
 namespace Fares\CatalogBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Category
  *
- * @ORM\Table(name="category")
- * @ORM\Entity(repositoryClass="Fares\CatalogBundle\Repository\CategoryRepository")
+ * @ORM\Table(name="product")
+ * @ORM\Entity(repositoryClass="Fares\CatalogBundle\Repository\ProductRepository")
  */
-class Category
+class Product
 {
-
-    public function __construct()
-    {
-        $this->products = new ArrayCollection();
-    }
-
     /**
      * @var int
      *
@@ -50,18 +43,27 @@ class Category
     private $image;
 
     /**
-     * one to many with products
-     * @ORM\OneToMany(targetEntity="Product", mappedBy="category")
+     * @ORM\Column(type="decimal", name="price")
      */
-    private $products;
+    private $price;
 
     /**
-     * @return mixed
+     * @ORM\Column(type="string", name="sku", unique=true)
      */
-    public function __toString()
-    {
-        return $this->getTitle();
-    }
+    private $sku;
+
+    /**
+     * @ORM\Column(type="integer", name="qty")
+     */
+    private $qty;
+
+    /**
+     * @ORM\Column(type="string", name="category")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="products")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
+     */
+    private $category;
+
 
     /**
      * Get id
@@ -143,6 +145,76 @@ class Category
     {
         $this->image = $image;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param mixed $price
+     * @return $this
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSku()
+    {
+        return $this->sku;
+    }
+
+    /**
+     * @param mixed $sku
+     * @return $this
+     */
+    public function setSku($sku)
+    {
+        $this->sku = $sku;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQty()
+    {
+        return $this->qty;
+    }
+
+    /**
+     * @param mixed $qty
+     * @return $this
+     */
+    public function setQty($qty)
+    {
+        $this->qty = $qty;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param mixed $category
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
     }
 
 }
