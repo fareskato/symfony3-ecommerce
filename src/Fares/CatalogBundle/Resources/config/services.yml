@@ -1,0 +1,22 @@
+services:
+#    fares.catalog.example:
+#        class:     Fares\CatalogBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+#        calls:
+#            - [setService, ["@service_id"]]
+#        tags:
+#            - { name: twig.extension }
+#            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+    #####  Image upload: register this in parameters.yml
+    fares_catalog.image_uploader:
+        class: Fares\CatalogBundle\Service\ImageUploader
+        arguments: ["%fares_catalog_images_directory%"]
+
+    #### Override the core module services
+    fares_catalog.category_menu:
+        class: Fares\CatalogBundle\Service\Menu\Category
+        arguments : ["@doctrine.orm.entity_manager", "@router"]
+
+    fares_catalog.onsale:
+        class: Fares\CatalogBundle\Service\Menu\Onsale
+        arguments: ["@doctrine.orm.entity_manager", "@router"]

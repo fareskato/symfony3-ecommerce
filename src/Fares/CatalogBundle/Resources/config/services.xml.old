@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+
+    <services>
+        <!-- Image uploader -->
+        <service id="fares_catalog.image_uploader" class="Fares\CatalogBundle\Service\ImageUploader">
+            <argument>%fares_catalog_image_directory%</argument>
+        </service>
+        <!-- category menu -->
+        <service id="fares_catalog.category_menu" class="Fares\CatalogBundle\Service\Menu\Category">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="router" />
+        </service>
+        <!-- onsale menu -->
+        <service id="fares_catalog.onsale" class="Fares\CatalogBundle\Service\Menu\Onsale">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="router" />
+        </service>
+
+    </services>
+
+</container>

@@ -1,0 +1,7 @@
+# This file is auto-generated during the composer install
+parameters:
+    fares_catalog_images_directory: "%kernel.root_dir%/../web/uploads/fares_catalog_images"
+
+#In order for our bundle to see the parameters.yml file, we still need to edit the
+#FaresCatalogExtension.php file within the src/Fares/CatalogBundle/
+#DependencyInjection/ directory

@@ -5,7 +5,9 @@ namespace Fares\CatalogBundle\Controller;
 use Fares\CatalogBundle\Entity\Category;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Category controller.
@@ -44,6 +46,11 @@ class CategoryController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Image upload handling
+            if($image = $category->getImage()){
+                $name = $this->get('fares_catalog.image_uploader')->upload($image);
+                $category->setImage($name);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($category);
             $em->flush();
@@ -81,11 +88,22 @@ class CategoryController extends Controller
      */
     public function editAction(Request $request, Category $category)
     {
+        // get the old image if exists
+        $existingImage = $category->getImage();
+        if($existingImage){
+            $category->setImage(new File($this->getParameter('fares_catalog_images_directory'). '/'. $existingImage));
+        }
         $deleteForm = $this->createDeleteForm($category);
         $editForm = $this->createForm('Fares\CatalogBundle\Form\CategoryType', $category);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            if($image = $category->getImage()){
+                $name = $this->get('fares_catalog.image_uploader')->upload($image);
+                $category->setImage($name);
+            } elseif ($existingImage){
+                $category->setImage($existingImage);
+            }
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('category_edit', array('id' => $category->getId()));

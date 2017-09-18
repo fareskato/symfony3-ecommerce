@@ -5,7 +5,9 @@ namespace Fares\CatalogBundle\Controller;
 use Fares\CatalogBundle\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Product controller.
@@ -44,6 +46,10 @@ class ProductController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if($image = $product->getImage()){
+                $name = $this->get('fares_catalog.image_uploader')->upload($image);
+                $product->setImage($name);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
             $em->flush();
@@ -81,11 +87,22 @@ class ProductController extends Controller
      */
     public function editAction(Request $request, Product $product)
     {
+        $existingImage = $product->getImage();
+        if($existingImage){
+            $product->setImage(new File($this->getParameter('fares_catalog_images_directory'). '/'. $existingImage));
+        }
+
         $deleteForm = $this->createDeleteForm($product);
         $editForm = $this->createForm('Fares\CatalogBundle\Form\ProductType', $product);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            if($image = $product->getImage()){
+                $name = $this->get('fares_catalog.image_uploader')->upload($image);
+                $product->setImage($name);
+            } elseif ($existingImage){
+                $product->setImage($existingImage);
+            }
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('product_edit', array('id' => $product->getId()));

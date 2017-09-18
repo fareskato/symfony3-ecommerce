@@ -4,6 +4,7 @@ namespace Fares\CatalogBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Category
@@ -46,6 +47,8 @@ class Category
 
     /**
      * @ORM\Column(type="string", name="image", nullable=true)
+     * @Assert\File(mimeTypes={ "image/png", "image/jpeg" },mimeTypesMessage="Please upload the PNG or JPEG image
+    file.")
      */
     private $image;
 
