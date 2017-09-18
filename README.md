@@ -15,7 +15,8 @@ under twig attribute
 
 02- Declare the service in your bundle services.yml
 
-#### Override the core module services
+Override the core module services
+    
     fares_catalog.category_menu:
         class: Fares\CatalogBundle\Service\Menu\Category
         arguments : ["@doctrine.orm.entity_manager", "@router"]
